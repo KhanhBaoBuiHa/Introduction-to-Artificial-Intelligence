@@ -1,0 +1,41 @@
+% Dung tich binh
+vx(4). %cho Vx=4
+vy(3). %cho Vy=3
+z(2).
+
+% Luat 1: Neu Y rong -> do day Y
+step((X,0),(X,Vy)) :- vy(Vy).
+
+% Luat 2: Neu X day -> do het nuoc ra
+step((Vx,Y),(0,Y)) :- vx(Vx).
+
+% Luat 3: Rot Y->X
+step((X,Y),(X2,Y2)) :-
+    vx(Vx),
+    X < Vx, Y > 0,
+    Need is Vx - X,
+    (
+                    Y >= Need ->
+                    X2 = Vx, Y2 is Y - Need
+                    ; X2 is X + Y, Y2 = 0
+    ).
+
+% Dieu kien dung
+goal((Z, _)) :- z(Z).
+goal((_, Z)) :- z(Z).
+
+% Chuong trinh minh hoa
+solve :-
+    Start = (0,0),
+    process(Start).
+
+process(State) :-
+    write(State), nl,
+    (   goal(State)
+    ->  write('--- Dat muc tieu ---'), nl
+    ;   step(State, Next),
+        process(Next)
+    ).
+
+
+
